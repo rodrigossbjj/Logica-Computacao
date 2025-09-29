@@ -6,7 +6,6 @@ from formula import *
 # Em seguida, vocˆe deve usar o c ́odigo dispon ́ıvel em
 # https://github.com/thiagoalvesifce/logicomp
 # e escrever um c ́odigo para a fun ̧c ̃ao number_of_connectives(formula).
-
 def number_of_connectives(a):
     if isinstance(a,Atom):
         return 0
@@ -47,4 +46,38 @@ def number_of_atoms(a):
     elif isinstance(a, (Implies, And, Or)):
         return number_of_atoms(a.left) + number_of_atoms(a.right)
     
+
+# Defina uma fun ̧c ̃ao recursiva formula_height(formula) que retorna a altura de
+# formula, onde a altura  ́e o maior n ́umero de conectivos entre o conectivo mais externo
+# e as f ́ormulas atˆomicas. Por exemplo, para a f ́ormula (p → (q ∧ r)) ∨ ¬s, a altura  ́e
+# 3. Vocˆe deve definir a fun ̧c ̃ao no contexto do reposit ́orio:
+# https://github.com/thiagoalvesifce/logicomp
+def formula_height(f):
+    if isinstance(f, Atom):
+        return 0
+    elif isinstance(f, Not):
+        return 1 + formula_height(f.inner)
+    elif isinstance(f, (Implies, And, Or)):
+        return 1 + max(formula_height(f.left), formula_height(f.right))
+    
+
+
+# Uma f ́ormula est ́a na forma normal da nega ̧c ̃ao (NNF - do inglˆes: negation normal
+# form) se a nega ̧c ̃ao s ́o  ́e aplicada diretamente nas atˆomicas e os outros  ́unicos conecti-
+# vos permitidos s ̃ao a conjun ̧c ̃ao e a disjun ̧c ̃ao. Por exemplo, ((p∧(¬(q∧r)))∧(¬r))∨s
+# n ̃ao est ́a na NNF e ((p∧((¬q)∧r))∧(¬r))∨s est ́a na NNF. Defina um pseudoc ́odigo
+# para a fun ̧c ̃ao is negation normal form(A) para verificar se A est ́a na NNF. Em se-
+# guida, vocˆe deve usar o reposit ́orio dispon ́ıvel em
+# https://github.com/thiagoalvesifce/logicomp
+# e escrever um c ́odigo para a fun ̧c ̃ao is_negation_normal_form(formula).
+def is_negation_normal_form(a):
+    if isinstance(a, Atom):
+        return True 
+    if isinstance(a, Not):
+        if isinstance(a.inner, Atom):
+            return True
+        return False
+    if isinstance(a, Or) or isinstance(a, And):
+        return is_negation_normal_form(a.right) and is_negation_normal_form(a.left)
+    return False
 
