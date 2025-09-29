@@ -81,3 +81,27 @@ def is_negation_normal_form(a):
         return is_negation_normal_form(a.right) and is_negation_normal_form(a.left)
     return False
 
+
+# Defina um pseudoc ́odigo recursivo que substitui toda ocorrˆencia da subf ́ormula B
+# dentro da f ́ormula A pela f ́ormula C.
+# Observe que substitution(((p ∧ ¬q) → r),(¬q),(r ∨ t)) deve retornar a f ́ormula ((p ∧
+# (r ∨ t)) → r).
+# Em seguida vocˆe deve usar reposit ́orio dispon ́ıvel em
+# https://github.com/thiagoalvesifce/logicomp
+# e escrever um c ́odigo para a fun ̧c ̃ao
+# substitution(formula, old_subformula, new_subformula).
+def substitution(formula, old_subformula, new_subformula):
+    if formula == old_subformula:
+        return new_subformula
+    if isinstance(formula, Atom):
+        return formula
+    if isinstance(formula, Not):
+        return substitution(formula.inner, old_subformula, new_subformula)
+    if isinstance(formula, And):
+        return And(substitution(formula.left, old_subformula, new_subformula), substitution(formula.right, old_subformula, new_subformula))
+
+    if isinstance(formula, Or):
+        return Or(substitution(formula.left, old_subformula, new_subformula), substitution(formula.right, old_subformula, new_subformula))
+
+    if isinstance(formula, Implies):
+        return Implies(substitution(formula.left, old_subformula, new_subformula), substitution(formula.right, old_subformula, new_subformula))
